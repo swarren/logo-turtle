@@ -15,10 +15,7 @@ to have my own turtle. So around Christmas 2014, I hacked one together myself.
 - 3D-printed chassis. Designed in OpenSCAD; see `turtle.scad`.
 - Arduino Pro (Uno) for motor/servo control. Code is in `turtle.ino`.
 - ESP8266 for WiFi to UART bridge, for communication to the Arduino. Code is
-  in `user_main.c`. Also needed is `uart.c` from the ESP8266 driver library
-  examples. You'll need to hack this into the ESP8266 SDK to build it. The
-  simplest option is probably to just copy `user_main.c` over the top of some
-  existing application in the SDK and rebuild it.
+  in `turtle-esp8266.ino`; this uses the ESP8266 Arduino port for simplicity.
 - Custom Arduino shield to mount the ESP8266 and motor driver boards; see
   `turtle.brd`. I sent this to http://oshpark.com/ for fabrication.
 - A bunch of hardware for Pololu, Sparkfun, and Amazon.

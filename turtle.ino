@@ -20,7 +20,7 @@
 
 #include <Servo.h>
 
-#define DEBUG 1
+#define DEBUG 0
 #define ARSIZE(_x_) (sizeof (_x_) / sizeof ((_x_)[0]))
 
 static inline void debug(const char *msg) {
@@ -271,9 +271,9 @@ void loop() {
     if (buf[0] == cmdtable[i].cmd) {
       ret = cmdtable[i].func(&buf[1]);
       if (ret)
-        Serial.println("ERROR");
+        Serial.println("ERROR:");
       else
-        Serial.println("OK");
+        Serial.println("OK:");
       return;
     }
   }

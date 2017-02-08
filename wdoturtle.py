@@ -18,8 +18,14 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
-import pexpect
+use_post = True
+
 import sys
+if use_post:
+    import http.client
+    import urllib.parse
+else:
+    import pexpect
 
 _debug_cmds = False
 _debug_angle = False
@@ -32,9 +38,10 @@ _CALIB_STEPS = 454 * _MICROSTEP_COUNT_MULT
 
 class Turtle(object):
     def __init__(self):
-        # FIXME: Need configuration of this:
-        self._exp = pexpect.spawnu('netcat 192.168.145.253 23')
-        if _debug_cmds: self._exp.logfile = sys.stdout
+        if not use_post:
+            # FIXME: Need configuration of this:
+            self._exp = pexpect.spawnu('netcat 192.168.145.253 23')
+            if _debug_cmds: self._exp.logfile = sys.stdout
         self._do_command('s' + str(_MICROSTEP))
         self._heading_angle = 0
         self._heading_steps = 0
@@ -101,5 +108,14 @@ class Turtle(object):
         if _debug_angle: print("Mod Angle: " + str(self._heading_angle))
 
     def _do_command(self, c):
-        self._exp.sendline(c)
-        self._exp.expect('OK')
+        if not use_post:
+            self._exp.sendline(c)
+            self._exp.expect('OK')
+        else:
+            params = urllib.parse.urlencode({'command': c})
+            headers = {"Content-type": "application/x-www-form-urlencoded"}
+            # FIXME: Need configuration of this:
+            conn = http.client.HTTPConnection("192.168.50.1:80")
+            conn.request("POST", "/", params, headers)
+            response = conn.getresponse()
+            conn.close()
